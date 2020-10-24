@@ -10,9 +10,7 @@ app.get('/api/ping', (req, res) => {
         success: true
     });
 });
-app.listen(port, () => {
-    console.log('Server running on port: ', port)
-});
+
 
 //Database mockup
 
@@ -36,13 +34,14 @@ const users = [
 // Get all users
 
 app.get('/api/users', (req, res) => {
+    // Return list of users
     res.status(200).json({
         success: true,
         users: users
     });
 });
 
-// Get one user
+
 app.get('/api/users/:id', (req, res) => {
     // Return user with specified id
     res.status(200).json({
@@ -81,4 +80,26 @@ app.post('/api/users', (req, res) => {
     }
 });
 
+// Kustuta kasutaja
 
+
+app.delete('/api/users', (req, res) => {
+    // Check if required data exists
+    const id = typeof(req.body.id) === 'number' ? req.body.id : false;
+    if(id || id === 0) {
+        users.splice(id, 1);
+        // Return success message
+        res.status(200).json({
+            success: true
+        });
+    } else {
+        // Return error message
+        res.status(400).json({
+            success: false,
+            message: 'Required field(s) missing or invalid'
+        });
+    }
+});
+app.listen(port, () => {
+    console.log('Server running on port: ', port)
+});
