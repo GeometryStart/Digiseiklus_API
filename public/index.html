@@ -1,0 +1,28 @@
+<html>
+<head>
+  <title>Express HTML</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+  <div style="margin:100px;">
+    <div class="jumbotron"  style="padding:40px;">
+      <h1>Digiseiklus mäng</h1>
+      <form method="POST" action="/mangima">
+        <div class="container">
+          <label for="username"><b>Kasutajanimi</b></label>
+          <input type="text" placeholder="Sisesta kasutajanimi" name="username" required>
+      
+          <label for="code"><b>Kood</b></label>
+          <input type="text" placeholder="Sisesta kood" name="code" required>
+          <button type="submit">Mängima</button>
+        </div>
+      </form>
+      <label>Mängija sisenes:</label>
+    </div>
+  </div>
+</body>
+</html>
+
