@@ -1,0 +1,221 @@
+@import url("http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css");
+
+@font-face {
+  font-family: "moonhouseregular";
+  src: url("../fonts/moonhouse-webfont.woff2") format("woff2"),
+    url("../fonts/moonhouse-webfont.woff") format("woff"),
+    url("../fonts/moonhouse-webfont.ttf") format("ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "zorqueregular";
+  src: url("../fonts/zorque-webfont.woff2") format("woff2"),
+    url("../fonts/zorgue-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #808080
+}
+
+
+/* Navigation */
+
+nav {
+  text-align: right;
+  width: 90%;
+  height: 20%;
+  margin: 2em auto;
+}
+
+.sidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  background-color: #ccc;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
+
+.sidenavopen {
+  width: 30em;
+}
+
+.sidenav .closebtn {
+  position: absolute;
+  top: 2em;
+  right: 2em;
+}
+
+i.fas {
+  color: #808080;
+  font-size: 2em;
+}
+
+i.fas:hover {
+    /* text-shadow: 0 0 1em lightblue; */
+}
+
+.opaque {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background-color: black;
+  filter: alpha(opacity=70);
+  opacity: 0.7;
+}
+
+.hide {
+    display: none;
+}
+
+
+/* Containers */
+
+.wrap {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* color: lightblue; */
+}
+
+.backanim {
+    animation: changecol 20s infinite;
+}
+
+.sidewrap {
+  width: 20em;
+  margin: auto;
+}
+
+
+/* Elements */
+
+h1 {
+  margin: 0;
+  margin-bottom: 0.2em;
+  justify-self: center;
+  text-transform: uppercase;
+  font-size: 71.8pt;
+  font-family: "zorqueregular";
+  color: #ccc;
+}
+
+h1:hover {
+    /* text-shadow: 0 0 3em lightblue; */
+}
+
+h2 {
+  font-family: "moonhouseregular";
+  text-transform: uppercase;
+  color: #808080;
+  margin-bottom: 1em;
+}
+
+p {
+
+}
+
+
+/* Forms */
+
+form {
+  margin: 0;
+  justify-self: center;
+  font-family: "moonhouseregular";
+}
+
+form textarea,
+form input {
+  width: 250px;
+  padding: 10px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+
+form input[type="text"] {
+  -webkit-border-radius: 0.3em;
+  -moz-border-radius: 0.3em;
+  border-radius: 0.3em;
+  border: 0.1em solid #ccc;
+  width: 14em;
+  height: 2.8em;
+  padding-left: 0.5em;
+  margin-bottom: 0.5em;
+  background-color: #e6e6e6;
+}
+
+form input[type="text"]:hover {
+  box-shadow: inset 0px 0px 1em #ccc;
+}
+
+form input[type="text"]:focus {
+  -webkit-border-radius: 0.3em;
+  -moz-border-radius: 0.3em;
+  border-radius: 0.3em;
+  outline: none;
+  border: 0.1em solid #2d9fd9;
+}
+
+form input[type="submit"] {
+  -webkit-border-radius: 0.3em;
+  -moz-border-radius: 0.3em;
+  border-radius: 0.3em;
+  border: none;
+  color: white;
+  text-transform: uppercase;
+  background-color: #808080;
+  width: 14em;
+  height: 2.8em;
+  margin-top: 0.5em;
+}
+
+#user > form input[type="submit"], #user > form input[type="text"] {
+    width: 100%;
+}
+
+form input[type="submit"]:hover {
+  box-shadow: 0px 0px 1em #ccc;
+}
+
+.create {
+    background-color: #b3b3b3!important;
+}
+
+
+/* Media queries */
+
+@media only screen and (max-width: 30em) {
+  .sidenavopen {
+    width: 100vw;
+  }
+  .sidewrap {
+    width: 20em;
+  }
+  h1 {
+    font-size: 38pt;
+  }
+}
+
+@keyframes changecol {
+    0% {background-color: rgb(37, 3, 90);}
+    25% {background-color: rgb(190, 6, 61);}
+    50% {background-color: purple;}
+    75% {background-color: rgb(4, 183, 196);}
+    100% {background-color: rgb(37, 3, 90);}
+}
