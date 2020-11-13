@@ -15,11 +15,6 @@ app.use((req, res, next) => {
     next();
 });
 
-app.get('/api/ping', (req, res) => {
-    res.status(200).json({
-        success: true
-    });
-});
 
 app.get('/', (req,res) => {
     res.sendFile('index.html');
@@ -29,10 +24,10 @@ app.get('/api/users', usersController.read);
 app.get('/api/users/:id', usersController.readById);
 app.post('/api/users', usersController.createUser);
 app.delete('/api/users', usersController.deleteUserById);
+app.post('/mangima', usersController.enterGame);
+app.get('/success/:id', usersController.startGame);
 
-app.get('/success', (req, res) => {
-    res.sendFile('/Users/admin/Desktop/ProgrammeerimineII/Digiseikluse/Digiseiklus_API/public/mangima.html');
-});
+
 /* app.get('/api/users/:id', (req,res)=>{
     const id = Number(req.params.id);
     const currentUsers = [];
@@ -44,32 +39,6 @@ app.get('/success', (req, res) => {
         
     });
 }); */
-
-app.post('/mangima', (req, res) => {
-    const username = typeof(req.body.uname) === 'string' && req.body.uname.trim().length > 0 ? req.body.uname : false;
-    //const score = typeof(req.body.score) === 'number' ? req.body.score : false;
-    const code = typeof(req.body.code) === 'string' ? req.body.code : false;
-
-    if (username && code){
-
-        const newUser = {
-            id: users.length,
-            username,
-            code
-        };
-
-        users.push(newUser);
-        res.redirect('/success');
-    }
-    else{
-        res.status(400).json({
-            success: false,
-            message: 'Required fields missing'
-        });
-    }
-});
-
-
 app.listen(port, () => {
     console.log('Server running on port: ', port)
 });
