@@ -1,5 +1,4 @@
 
-
 const usersService = require('../controllers/services/usersService')
 const usersController = {};
 const users = usersService.read();
@@ -22,20 +21,22 @@ usersController.readById = (req, res) => {
     });
 }
 
-usersController.createUser = (req, res) => {
+usersController.createUser = async (req, res) => {
     const username = typeof(req.body.username) === 'string' && req.body.username.trim().length > 0 ? req.body.username : false;
-    //const score = typeof(req.body.score) === 'number' ? req.body.score : false;
+    const password = typeof(req.body.password) === 'string' && req.body.password.trim().length > 2 ? req.body.password : false;
     const code = typeof(req.body.code) === 'number' ? req.body.code : false;
 
-    if (username && code){
+    if (username && code && password){
 
         const newUser = {
             username,
-            code
+            code,
+            password
         };
-
-        const createdUser = usersService.createUser(newUser);
+        
+        const createdUser = await usersService.createUser(newUser);
         res.status(201).json({success: true, user: createdUser});
+        
     }
     else {
         res.status(400).json({

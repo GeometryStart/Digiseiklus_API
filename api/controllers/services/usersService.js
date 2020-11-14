@@ -1,11 +1,15 @@
+const hashService = require('./hashService');
 const users =[
     {
         id: 0,
         username: "Masha",
-        code: 112233
+        code: 112233,
+        password: "$2b$10$VaU1IpA4x6cTPwGO6tbPleoLmIOV.TDIEJL1h/mz.WY/J.FGPeGwu" //jahuu
+        //isPlayer: true
     }
 ];
 const fs = require('fs');
+
 
 usersService = {};
 
@@ -18,8 +22,10 @@ usersService.readById = (userId) => {
     return users[userId];
 }
 
-usersService.createUser = (newUser) => {
+usersService.createUser = async (newUser) => {
     newUser.id = users.length;
+    newUser.password = await hashService.hash(newUser.password);
+    
     users.push(newUser);
     // Create new json from newUser for response
     const userToReturn = { ... newUser};
@@ -47,6 +53,9 @@ usersService.enterGame = (newUser) => {
     return userToReturn;
 }
 
-
+usersService.readByUsername = (username) => {
+    const user = users.find(user => user.username === username);
+    return user;
+}
 module.exports = usersService;
 
