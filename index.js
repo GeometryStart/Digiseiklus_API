@@ -1,8 +1,11 @@
 const express = require('express');
 const app = express();
-const port = 3000
+const db = require('./config');
+const port = 3000;
+
 const usersController = require('./api/controllers/usersController');
-const authController = require('./api/controllers/authController')
+const authController = require('./api/controllers/authController');
+const config = require('./config');
 //middleware mis käivitub iga päringuga.
 const logging = (req, res, next) => {
     console.log(req.headers);
@@ -13,6 +16,7 @@ const logging = (req, res, next) => {
 app.use(express.static('public'))
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+
 // annab igale päringule headeri
 
 app.use((req, res, next) => {
@@ -23,7 +27,7 @@ app.use((req, res, next) => {
     );
     next();
 });
-app.use(logging);
+//app.use(logging);
 
 app.get('/', (req,res) => {
     res.sendFile('index.html');

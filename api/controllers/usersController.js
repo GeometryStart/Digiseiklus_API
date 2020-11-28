@@ -1,31 +1,38 @@
-
-const usersService = require('../controllers/services/usersService')
+const usersService = require('../controllers/services/usersService');
+const db = require('./../../db');
 const usersController = {};
-const users = usersService.read();
-    
-usersController.read = (req, res) => {
-    
+
+
+usersController.read = async (req, res) => {
+    const users = await usersService.read();
     //Return list of users
     res.status(200).json({
         success: true,
         users: users
     });
 }  
-usersController.readById = (req, res) => {
+usersController.readById = async (req, res) => {
     // Return user with specified id
     const userId = req.params.id;
-    const user = usersService.readById(userId);
-    res.status(200).json({
-        success: true,
-        user: user
-    });
+    if(userId){
+        const user = await usersService.readById(userId);
+        res.status(200).json({
+            success: true,
+            user: user
+        });
+    } else {
+        res.status(400).json({
+            success: false,
+            message: 'No id provided'
+        });
+    }
 }
 
 usersController.createUser = async (req, res) => {
     const username = typeof(req.body.username) === 'string' && req.body.username.trim().length > 0 ? req.body.username : false;
     const password = typeof(req.body.password) === 'string' && req.body.password.trim().length > 2 ? req.body.password : false;
     const code = typeof(req.body.code) === 'number' ? req.body.code : false;
-
+    
     if (username && code && password){
 
         const newUser = {
@@ -63,14 +70,14 @@ usersController.deleteUserById = (req, res) => {
         });
     }
 }
-usersController.enterGame = (req, res) => {
-    const username = typeof(req.body.uname) === 'string' && req.body.uname.trim().length > 0 ? req.body.uname : false;
+usersController.enterGame = async (req, res) => {
+    const username = typeof(req.body.username) === 'string' && req.body.username.trim().length > 0 ? req.body.username : false;
     //const score = typeof(req.body.score) === 'number' ? req.body.score : false;
     const code = typeof(req.body.code) === 'string' ? req.body.code : false;
     
     
     if (username && code) {
-        
+        const users = await usersService.read();
         users.forEach(user => {
             if (username != user.username){
                 const newUser = {

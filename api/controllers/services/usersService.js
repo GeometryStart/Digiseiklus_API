@@ -1,4 +1,5 @@
 const hashService = require('./hashService');
+const db = require('../../../db');
 const users =[
     {
         id: 0,
@@ -14,23 +15,44 @@ const fs = require('fs');
 usersService = {};
 
 //Get all Users
-usersService.read = () => {
+usersService.read = async () => {
+    const usersRef = db.collection('users');
+    const snapshot = await usersRef.get();
+    const users = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+    console.log(users);
     return users;
 }
+
 //Return user by Id
-usersService.readById = (userId) => {
-    return users[userId];
-}
+usersService.readById = async (userId) => {
+   
+    const doc = await db.collection('users').doc(userId).get();
+    
+    if (!doc.exists){
+        console.log('No such document');
+        return false;
+    }
+    
+    const user = doc.data();
+    console.log('DOcument data: ', user);
+    
+    return user;
+} 
+   
+
 
 usersService.createUser = async (newUser) => {
-    newUser.id = users.length;
     newUser.password = await hashService.hash(newUser.password);
-    
-    users.push(newUser);
-    // Create new json from newUser for response
-    const userToReturn = { ... newUser};
-    //delete userToReturn.password;
-    return userToReturn;
+  // Add user to 'database'
+  await db.collection('users').doc().set(newUser);
+  // Create new json from newUser for response
+  const userToReturn = { ... newUser };
+  // Remove password from user data
+  delete userToReturn.password;
+  return userToReturn;
 }
 usersService.enterGame = (newUser) => {
     newUser.id = users.length;
@@ -53,9 +75,21 @@ usersService.enterGame = (newUser) => {
     return userToReturn;
 }
 
-usersService.readByUsername = (username) => {
+/* usersService.readByUsername = (username) => {
     const user = users.find(user => user.username === username);
     return user;
-}
+} */
+
+
+usersService.readByUsername = async (username) => {
+    // const user = users.find(user => user.email === email);
+    const usersRef = db.collection('users');
+    const snapshot = await usersRef.where('username', '==', username).get();
+    if (snapshot.empty) {
+      console.log('No matching documents.');
+      return;
+    } 
+    return user;
+  }
 module.exports = usersService;
 
