@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', (req,res) => {
-    res.sendFile('index.html');
+    res.sendFile('../../public/index.html');
 });
 
 // Import controllers
@@ -29,12 +29,7 @@ router.use(isLoggedIn);
 router.get('/api/users', usersController.read);
 router.get('/api/users/:id', usersController.readById);
 
-
 router.delete('/api/users', usersController.delete);
-
-
-
-
 
 module.exports = router;
 
