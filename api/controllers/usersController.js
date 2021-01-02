@@ -1,5 +1,5 @@
-const usersService = require('../controllers/services/usersService');
-const db = require('./../../db');
+const usersService = require('../services/usersService');
+const db = require('../../db');
 const usersController = {};
 
 
@@ -28,6 +28,22 @@ usersController.readById = async (req, res) => {
     }
 }
 
+usersController.readByUsername = async (req, res) => {
+    // Return user with specified username
+    const username = req.params.username;
+    if (username) {
+        const user = await usersService.readByUsername(username);
+        res.status(200).json({
+            success: true,
+            user: user
+        });
+    } else {
+        res.status(400).json({
+            success: false,
+            message: 'No username provided'
+        });
+    }
+}
 usersController.createUser = async (req, res) => {
     const username = typeof(req.body.username) === 'string' && req.body.username.trim().length > 0 ? req.body.username : false;
     const password = typeof(req.body.password) === 'string' && req.body.password.trim().length > 2 ? req.body.password : false;
@@ -52,7 +68,6 @@ usersController.createUser = async (req, res) => {
         });
     } 
 }
-
 usersController.deleteUserById = (req, res) => {
     // Check if required data exists
     const id = typeof(req.body.id) === 'number' ? req.body.id : false;
@@ -73,7 +88,7 @@ usersController.deleteUserById = (req, res) => {
 usersController.enterGame = async (req, res) => {
     const username = typeof(req.body.username) === 'string' && req.body.username.trim().length > 0 ? req.body.username : false;
     //const score = typeof(req.body.score) === 'number' ? req.body.score : false;
-    const code = typeof(req.body.code) === 'string' ? req.body.code : false;
+    const code = typeof(req.body.code) === 'number' ? req.body.code : false;
     
     
     if (username && code) {

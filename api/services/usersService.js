@@ -1,16 +1,7 @@
 const hashService = require('./hashService');
-const db = require('../../../db');
-const users =[
-    {
-        id: 0,
-        username: "Masha",
-        code: 112233,
-        password: "$2b$10$VaU1IpA4x6cTPwGO6tbPleoLmIOV.TDIEJL1h/mz.WY/J.FGPeGwu" //jahuu
-        //isPlayer: true
-    }
-];
-const fs = require('fs');
+const db = require('../../db');
 
+const fs = require('fs');
 
 usersService = {};
 
@@ -26,21 +17,30 @@ usersService.read = async () => {
     return users;
 }
 
-//Return user by Id
-usersService.readById = async (userId) => {
-   
-    const doc = await db.collection('users').doc(userId).get();
-    
-    if (!doc.exists){
-        console.log('No such document');
-        return false;
+//Return user by username
+usersService.readByUsername = async (username) => {
+    const snapshot = await db.collection('users').where('username', '==', username).get();
+    if (snapshot.empty) {
+      console.log('No matching user.');
+      return;
     }
-    
-    const user = doc.data();
-    console.log('DOcument data: ', user);
-    
+    const user = {
+      username: snapshot.docs[0].username,
+      ...snapshot.docs[0].data()
+    };
     return user;
-} 
+  }
+  
+  // Return user by id
+  usersService.readById = async (userId) => {
+    const doc = await db.collection('users').doc(userId).get();
+    if (!doc.exists) {
+      console.log('No user found!');
+      return false;
+    }
+    const user = doc.data();
+    return user;
+  }
    
 
 
@@ -80,16 +80,5 @@ usersService.enterGame = (newUser) => {
     return user;
 } */
 
-
-usersService.readByUsername = async (username) => {
-    // const user = users.find(user => user.email === email);
-    const usersRef = db.collection('users');
-    const snapshot = await usersRef.where('username', '==', username).get();
-    if (snapshot.empty) {
-      console.log('No matching documents.');
-      return;
-    } 
-    return user;
-  }
 module.exports = usersService;
 
