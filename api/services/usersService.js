@@ -18,7 +18,19 @@ usersService.read = async () => {
 }
 
 //Return user by username
-usersService.readByUsername = async (username) => {
+usersService.readByEmail= async (email) => {
+    const snapshot = await db.collection('users').where('email', '==', email).get();
+    if (snapshot.empty) {
+      console.log('No matching user.');
+      return;
+    }
+    const user = {
+      email: snapshot.docs[0].email,
+      ...snapshot.docs[0].data()
+    };
+    return user;
+  }
+  usersService.readByUsername= async (username) => {
     const snapshot = await db.collection('users').where('username', '==', username).get();
     if (snapshot.empty) {
       console.log('No matching user.');
@@ -30,7 +42,6 @@ usersService.readByUsername = async (username) => {
     };
     return user;
   }
-  
   // Return user by id
   usersService.readById = async (userId) => {
     const doc = await db.collection('users').doc(userId).get();
@@ -44,41 +55,54 @@ usersService.readByUsername = async (username) => {
    
 
 
-usersService.createUser = async (newUser) => {
-    newUser.password = await hashService.hash(newUser.password);
-  // Add user to 'database'
-  await db.collection('users').doc().set(newUser);
-  // Create new json from newUser for response
-  const userToReturn = { ... newUser };
-  // Remove password from user data
-  delete userToReturn.password;
-  return userToReturn;
-}
-usersService.enterGame = (newUser) => {
-    newUser.id = users.length;
-    users.push(newUser);
+usersService.createUser = async (user) => {
+
+    user.password = await hashService.hash(user.password);
+    // Add user to 'database'
+    await db.collection('users').doc().set(user);
     // Create new json from newUser for response
-    const userToReturn = { ... newUser};
-    //delete userToReturn.password;
+    const userToReturn = { ... user };
+    // Remove password from user data
+    delete userToReturn.password;
+    return userToReturn;
+ 
+}
 
-    let writeStream = fs.createWriteStream('scores.txt');
-    // write some data with a base64 encoding
-    let data = JSON.stringify(newUser);
-    fs.writeFileSync('scores.txt', data);
+usersService.update = async (user) => {
+    const doc = await db.collection('users').doc(user.id).get();
+    if (!doc.exists) {
+    console.log('No matching user.');
+    return false;
+  }
+  let update = {};
+    // Check if optional data exists
+    if (user.score) {
+        // Change user data in 'database'
+        update.score = user.score;
+    }
+    // Check if optional data exists
 
-    // the finish event is emitted when all data has been flushed from the stream
-    writeStream.on('finish', () => {
-        console.log('wrote all data to file');
-    });
-    writeStream.end();
-// close the stream
+    const res = await db.collection('users').doc(user.id).update(update);
+    return true;
+}
+
+
+
+usersService.enterGame = async (newUser) => {
+    await db.collection('users').doc().set(newUser);
+    const userToReturn = { ... newUser };
     return userToReturn;
 }
 
-/* usersService.readByUsername = (username) => {
-    const user = users.find(user => user.username === username);
-    return user;
-} */
+usersService.delete = async (id) => {
+    const doc = await db.collection('users').doc(id).get();
+    if (!doc.exists) {
+      console.log('No matching user.');
+      return false;
+    }
+    await db.collection('users').doc(id).delete();
+    return true;
+  }
 
 module.exports = usersService;
 
