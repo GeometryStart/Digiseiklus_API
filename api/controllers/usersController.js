@@ -120,23 +120,40 @@ usersController.enterGame = async (req, res) => {
     
     if (username && code) {
         const users = await usersService.read();
-        users.forEach(user => {
-            if (username != user.username){
-                const newUser = {
-                    username,
-                    code,
-                    score
-                }
-                console.log(newUser);
-                const createdUser = usersService.enterGame(newUser);
-                console.log('Got body:', req.body);
-                res.redirect('/success/' + req.body.username);
+        console.log("Andmebaasis kasutajad: ", users);
+
+        if (users === undefined || users.length == 0){
+            const newUser = {
+                username,
+                code,
+                score
             }
-            else{
-                console.log("See kasutaja on juba olemas");
-            };
-            
-        });
+            console.log("ei ole kasutajaid ja loome: ", newUser);
+            const createdUser = usersService.enterGame(newUser);
+            res.redirect('/');
+        }
+        else{
+            users.forEach(user => {
+                if (username != user.username){
+                    const newUser = {
+                        username,
+                        code,
+                        score
+                    }
+                    console.log(newUser);
+                    const createdUser = usersService.enterGame(newUser);
+                    res.redirect('/');
+                }
+                else{
+                    res.status(400).json({
+                        success: false,
+                        message: 'There is already user with that name, choose another one'
+                    });
+                };
+                
+            });
+
+        }
     }
     else{
         res.status(400).json({
@@ -147,7 +164,7 @@ usersController.enterGame = async (req, res) => {
 }; 
 usersController.startGame = (req, res) => {
     
-    res.sendFile('../../public/mangima.html', { root: __dirname });
+    res.sendFile('../../public/index.html');
     
 }; 
 usersController.delete = async (req, res) => {
