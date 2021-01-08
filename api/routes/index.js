@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', (req,res) => {
-    res.sendFile('../../public/index.html');
+    res.sendFile('../../index.html');
 });
 
 // Import controllers
@@ -15,7 +15,7 @@ const isLoggedIn = require('../middlewares/isLoggedIn');
 //Routes
 //õpilase sisenemine mängu
 router.post('/mangima', usersController.enterGame);
-router.get('/success/:id', usersController.startGame);
+router.get('/success/', usersController.startGame);
 // adds game score to user data
 router.put('/api/users', usersController.update);
 
