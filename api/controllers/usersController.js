@@ -16,9 +16,14 @@ usersController.readById = async (req, res) => {
     const userId = req.params.id;
     if(userId){
         const user = await usersService.readById(userId);
-        res.status(200).json({
-            success: true,
-            user: user
+        if (user){
+            res.status(200).json({
+                success: true,
+                user: user
+            });
+        }
+        res.status(400).json({
+            message: "No such user registered"
         });
     } else {
         res.status(400).json({
